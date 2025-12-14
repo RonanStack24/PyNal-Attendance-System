@@ -1,0 +1,364 @@
+/* --- Global Styles and Variables --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+:root {
+  --blue-header: #3f51b5; /* Blue */
+  --blue-sidebar-top: #0091ea; /* Light Blue */
+  --blue-sidebar-bottom: #00bcd4; /* Cyan/Teal */
+  --blue-active: #0057ff; /* Active border color */
+  --text-dark: #000;
+  --text-light: #fff;
+  --text-gray: #616161;
+  --border-light: #bdbdbd;
+  --border-dark: #999;
+}
+
+body {
+  background-color: #ffffff;
+  color: var(--text-dark);
+}
+
+/* --- Top Bar (Appears on all pages) --- */
+.top-bar {
+  background-color: var(--blue-header);
+  color: var(--text-light);
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.top-bar-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+.login-button {
+  border: none;
+  background-color: transparent;
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 10px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* --- Layout for Admin Pages --- */
+.main-layout {
+  display: flex;
+  min-height: calc(100vh - 110px); /* Adjust based on footer position */
+}
+
+/* --- Sidebar (Navigation) --- */
+.sidebar {
+  width: 180px;
+  background: linear-gradient(180deg, var(--blue-sidebar-top), var(--blue-sidebar-bottom));
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  padding: 12px 18px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-light);
+  display: block;
+  transition: background-color 0.2s, border-left 0.2s;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-left: 4px solid var(--blue-active);
+}
+
+/* --- Content Area --- */
+.content {
+  flex: 1;
+  padding: 30px 40px;
+  background-color: #f7f7f7;
+}
+
+.page-header {
+  font-size: 18px;
+  color: var(--text-gray);
+  margin-bottom: 25px;
+  letter-spacing: 0.05em;
+}
+
+/* --- Forms & Buttons --- */
+.management-area {
+  display: flex;
+  gap: 30px;
+}
+
+.form-card, .student-card {
+  width: 260px;
+  border: 2px solid var(--border-dark);
+  padding: 25px;
+  background-color: #fff;
+}
+
+.form-card h3 {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: var(--text-gray);
+  letter-spacing: 0.05em;
+}
+
+.form-card input, .filters input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+.filters input { margin-bottom: 0; }
+
+.save-button, .update-button, .filters button, .add-button {
+  border: none;
+  background-color: var(--blue-header); /* Default blue for save/go */
+  color: var(--text-light);
+  padding: 10px 25px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.add-button {
+  background-color: var(--blue-sidebar-top); /* Teal/light blue for ADD */
+  float: right;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+}
+.filters button {
+    background-color: var(--blue-sidebar-top); 
+    padding: 8px 16px;
+}
+
+.cancel-button {
+  border: 1px solid var(--border-light);
+  background-color: #fff;
+  color: #424242;
+  padding: 10px 25px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: none;
+  margin: 10px auto 0;
+}
+
+/* --- Tables --- */
+.user-table-wrapper, .student-table-wrapper, .attendance-table-wrapper {
+  flex: 1;
+  border: 2px solid var(--border-dark);
+  background-color: #fff;
+  padding: 10px 18px 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--blue-header);
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+td {
+  border: 1px solid var(--border-light);
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+/* This is for the header of the student list in student_mngt.html */
+.student-table-wrapper table:first-child th {
+  border: 1px solid var(--border-light);
+  border-bottom: none; 
+}
+
+
+/* Scrollable Body */
+.table-body-scroll {
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid var(--border-light);
+  border-top: none;
+}
+.table-body-scroll table { 
+  width: 100%;
+  border-collapse: collapse; 
+}
+.table-body-scroll td {
+  border: 1px solid var(--border-light);
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Action Buttons in Tables */
+.action-buttons button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin: 0 4px;
+  font-size: 14px;
+  color: #616161; /* Default color */
+}
+.action-buttons button:hover {
+    color: var(--blue-header);
+}
+.action-buttons button:last-child {
+    color: #d32f2f; /* Red for delete/close icon */
+}
+
+/* --- Student Card Specific (student_mngt.html) --- */
+.student-card {
+  text-align: center;
+}
+.student-card .avatar {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--text-dark);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  background-color: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+}
+.student-field {
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  text-align: left;
+  font-size: 13px;
+}
+.student-field input {
+    /* Style for editable fields */
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+}
+.qr-code-box {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--text-dark);
+  margin: 15px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  background-color: #fff;
+}
+.qr-code-box img, .qr-code-box canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* --- Admin Login & Check User (Single Page Layout) --- */
+.page-wrapper {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login-card {
+  width: 360px;
+  border: 2px solid var(--text-dark);
+  padding: 35px;
+  text-align: center;
+  background-color: #fff;
+}
+.login-card h1 {
+  font-size: 16px;
+  color: var(--blue-header);
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+.divider {
+  width: 80%;
+  height: 2px;
+  background-color: var(--blue-header);
+  margin: 0 auto 20px;
+}
+.login-button {
+  background-color: var(--blue-header);
+  color: var(--text-light);
+  font-size: 14px;
+  padding: 10px 25px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* Check User Card */
+.info-card {
+    border: 1px solid var(--text-dark);
+    width: 380px;
+    padding: 18px 20px;
+    display: flex;
+    position: relative;
+    font-size: 13px;
+}
+.info-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 145px;
+    border-left: 1px solid var(--text-dark);
+}
+.info-labels { width: 145px; font-weight: bold; }
+.info-values { padding-left: 20px; }
+.info-row { margin-bottom: 10px; }
+.avatar-circle { 
+    width: 110px; height: 110px; border-radius: 50%; border: 5px solid #000;
+    /* Styles for the circle background for a no-photo look */
+}
+
+/* --- Index/Scanner Page --- */
+.qr-wrapper {
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 80px;
+    width: 420px;
+    height: 260px;
+    border: 2px solid var(--border-light);
+    background-color: #fafafa;
+    overflow: hidden;
+}
+
+/* --- Footer --- */
+.footer {
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  font-size: 11px;
+  color: #757575;
+  padding: 15px 0;
+}

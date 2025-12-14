@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+attendance.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static files (optional - comment out if you want to include photos/qr codes)
+static/photos/*
+static/qr_codes/*
+!static/photos/.gitkeep
+!static/qr_codes/.gitkeep

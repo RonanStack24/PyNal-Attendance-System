@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Student</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px 0;
+      }
+
+      .page-wrapper {
+        width: 100%;
+        max-width: 950px;
+        margin: 0 auto;
+        min-height: calc(100vh - 40px);
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .top-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        padding: 18px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        padding: 40px 40px 60px;
+        background-color: #f7fafc;
+      }
+
+      .panel {
+        border-radius: 12px;
+        padding: 30px;
+        width: 420px;
+        min-height: 550px;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .panel:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .left-panel {
+        padding-bottom: 30px;
+      }
+
+      .camera-label {
+        color: #e53e3e;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        text-align: left;
+        padding-left: 4px;
+        letter-spacing: 0.5px;
+      }
+
+      .camera-container {
+        width: 100%;
+        height: 220px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        position: relative;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      #video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      #captured-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+      }
+
+      .camera-controls {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn {
+        border: none;
+        padding: 10px 20px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-capture {
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        box-shadow: 0 4px 8px rgba(229, 62, 62, 0.3);
+      }
+
+      .btn-capture:hover {
+        box-shadow: 0 6px 12px rgba(229, 62, 62, 0.4);
+      }
+
+      .btn-retake {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        box-shadow: 0 4px 8px rgba(74, 85, 104, 0.3);
+      }
+
+      .btn-retake:hover {
+        box-shadow: 0 6px 12px rgba(74, 85, 104, 0.4);
+      }
+
+      .form-group {
+        margin-bottom: 14px;
+        position: relative;
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid #e2e8f0;
+        font-size: 13px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background-color: #f7fafc;
+        font-weight: 500;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #667eea;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-input::placeholder {
+        color: #a0aec0;
+        font-weight: 400;
+      }
+
+      .form-input[readonly] {
+        background-color: #edf2f7;
+        color: #4a5568;
+        cursor: not-allowed;
+      }
+
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%23667eea' d='M7 10L2 5h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 40px;
+        cursor: pointer;
+      }
+
+      .btn-snap {
+        margin-top: 20px;
+        width: 140px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .right-panel {
+        position: relative;
+      }
+
+      .right-top {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        margin-bottom: 35px;
+      }
+
+      .photo-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 5px solid #667eea;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .photo-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .photo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-preview-placeholder {
+        font-size: 12px;
+        color: #a0aec0;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      #qr-code-container {
+        width: 110px;
+        height: 110px;
+        border: 4px solid #2d3748;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      #qr-code-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      #qr-code-container canvas {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .right-inner {
+        position: relative;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px 28px;
+        margin: 20px auto 0;
+        width: 340px;
+        background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .right-inner::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        bottom: 12px;
+        left: 155px;
+        border-left: 2px solid #e2e8f0;
+      }
+
+      .info-row {
+        display: flex;
+        font-size: 13px;
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+      }
+
+      .info-row:hover {
+        transform: translateX(4px);
+      }
+
+      .info-label {
+        width: 130px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #4a5568;
+        letter-spacing: 0.3px;
+      }
+
+      .info-value {
+        flex: 1;
+        padding-left: 20px;
+        color: #2d3748;
+        font-weight: 600;
+      }
+
+      .btn-save-wrapper {
+        margin-top: 28px;
+        text-align: center;
+        margin-bottom: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 30px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn-save {
+        width: 140px;
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
+      }
+
+      .btn-save:hover {
+        background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+        box-shadow: 0 6px 12px rgba(72, 187, 120, 0.4);
+      }
+
+      .btn-save:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-save:disabled:hover {
+        transform: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-cancel {
+        width: 140px;
+        background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+        box-shadow: 0 4px 8px rgba(113, 128, 150, 0.3);
+      }
+
+      .btn-cancel:hover {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        box-shadow: 0 6px 12px rgba(113, 128, 150, 0.4);
+      }
+
+      .message {
+        padding: 12px 16px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.success {
+        background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        color: #22543d;
+        border: 2px solid #48bb78;
+      }
+
+      .message.error {
+        background: linear-gradient(135deg, #fed7d7 0%, #fc8181 100%);
+        color: #742a2a;
+        border: 2px solid #e53e3e;
+      }
+
+      .footer-line {
+        border-top: 2px solid #e2e8f0;
+        margin: 0 40px;
+      }
+
+      footer {
+        text-align: center;
+        font-size: 12px;
+        color: #718096;
+        padding: 16px 0 18px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+
+      @media (max-width: 1200px) {
+        .content {
+          gap: 20px;
+          padding: 30px 20px 60px;
+        }
+
+        .panel {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .content {
+          flex-direction: column;
+          align-items: center;
+          padding: 20px 15px 60px;
+        }
+
+        .panel {
+          width: 100%;
+          max-width: 420px;
+          min-height: auto;
+          padding: 20px;
+        }
+
+        .left-panel {
+          padding-bottom: 20px;
+        }
+
+        .camera-container {
+          height: 200px;
+          margin-bottom: 18px;
+        }
+
+        .right-top {
+          gap: 30px;
+          margin-bottom: 25px;
+        }
+
+        .top-bar {
+          padding: 14px 20px;
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .page-wrapper {
+          margin: 0;
+          padding: 0;
+          border-radius: 0;
+          min-height: 100vh;
+        }
+
+        .top-bar {
+          padding: 12px 16px;
+          font-size: 14px;
+        }
+
+        .content {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 12px 50px;
+        }
+
+        .panel {
+          width: 100%;
+          max-width: none;
+          padding: 15px;
+          border-radius: 8px;
+        }
+
+        .camera-label {
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+
+        .camera-container {
+          height: 180px;
+          margin-bottom: 15px;
+        }
+
+        .form-input,
+        .form-select {
+          padding: 11px 12px;
+          font-size: 14px;
+        }
+
+        .form-group {
+          margin-bottom: 12px;
+        }
+
+        .btn {
+          padding: 9px 16px;
+          font-size: 12px;
+          border-radius: 6px;
+        }
+
+        .btn-snap {
+          width: 120px;
+          margin-top: 15px;
+        }
+
+        .right-top {
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+
+        .photo-preview {
+          width: 100px;
+          height: 100px;
+          border-width: 4px;
+        }
+
+        #qr-code-container {
+          width: 100px;
+          height: 100px;
+          border-width: 3px;
+        }
+
+        .right-inner {
+          width: 100%;
+          padding: 18px 16px;
+          margin: 15px auto 0;
+        }
+
+        .right-inner::before {
+          display: none;
+        }
+
+        .info-row {
+          flex-direction: column;
+          margin-bottom: 10px;
+          font-size: 12px;
+        }
+
+        .info-label {
+          width: 100%;
+          margin-bottom: 4px;
+          font-size: 11px;
+        }
+
+        .info-value {
+          padding-left: 0;
+          padding-top: 4px;
+          font-size: 12px;
+        }
+
+        .btn-save-wrapper {
+          position: static;
+          transform: none;
+          bottom: auto;
+          left: auto;
+          margin-top: 20px;
+          gap: 10px;
+          flex-direction: column;
+        }
+
+        .btn-save,
+        .btn-cancel {
+          width: 100%;
+        }
+
+        footer {
+          font-size: 11px;
+          padding: 12px 0 14px;
+        }
+
+        .footer-line {
+          margin: 0 12px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .form-input,
+        .form-select {
+          font-size: 16px;
+        }
+
+        .btn {
+          padding: 8px 12px;
+        }
+
+        .message {
+          font-size: 12px;
+          padding: 10px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="top-bar">PYTHON (19877) 8:00 - 10:30 A.M MW</div>
+
+      <div class="content">
+        <!-- LEFT: camera + form -->
+        <div class="panel left-panel">
+          <div class="camera-label">CAMERA VIEWER</div>
+          <div class="camera-container">
+            <video id="video" autoplay></video>
+            <img id="captured-photo" alt="Captured photo" />
+            <div class="camera-controls" id="camera-controls">
+              <button
+                type="button"
+                class="btn btn-retake"
+                id="retake-btn"
+                onclick="retakePhoto()"
+                style="display: none"
+              >
+                RETAKE
+              </button>
+            </div>
+          </div>
+
+          <div class="message" id="message"></div>
+
+          <form id="student-form">
+            <div class="form-group">
+              <input
+                class="form-input"
+                type="text"
+                id="idno"
+                placeholder="IDNO (Auto-generated)"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="form-input"
+                type="text"
+                id="lastname"
+                placeholder="LASTNAME"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="form-input"
+                type="text"
+                id="firstname"
+                placeholder="FIRSTNAME"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <select class="form-select" id="course" required>
+                <option value="">COURSE</option>
+                <option value="BSCE">BSCE</option>
+                <option value="BSIT">BSIT</option>
+                <option value="BSCRIM">BSCRIM</option>
+                <option value="BSHM">BSHM</option>
+                <option value="BSME">BSME</option>
+                <option value="BSN">BSN</option>
+                <option value="BSCS">BSCS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-select" id="level" required>
+                <option value="">LEVEL</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-snap"
+              id="snap-btn"
+              onclick="capturePhoto()"
+            >
+              SNAP
+            </button>
+          </form>
+        </div>
+
+        <!-- RIGHT: ID preview card -->
+        <div class="panel right-panel">
+          <div class="right-top">
+            <div class="photo-preview" id="photo-preview">
+              <div class="photo-preview-placeholder">No Photo</div>
+            </div>
+            <div id="qr-code-container">
+              <div style="font-size: 11px; color: #999">QR CODE</div>
+            </div>
+          </div>
+
+          <div class="right-inner">
+            <div class="info-row">
+              <div class="info-label">IDNO</div>
+              <div class="info-value" id="preview-idno">----</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">LASTNAME</div>
+              <div class="info-value" id="preview-lastname">----</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">FIRSTNAME</div>
+              <div class="info-value" id="preview-firstname">----</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">COURSE</div>
+              <div class="info-value" id="preview-course">----</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">LEVEL</div>
+              <div class="info-value" id="preview-level">----</div>
+            </div>
+          </div>
+
+          <div class="btn-save-wrapper">
+            <button
+              type="button"
+              class="btn btn-cancel"
+              onclick="cancelAndGoBack()"
+            >
+              CANCEL
+            </button>
+            <button
+              type="button"
+              class="btn btn-save"
+              id="save-btn"
+              onclick="saveStudent()"
+              disabled
+            >
+              SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-line"></div>
+      <footer>Copyright &copy; Badilles Govan & Ronan Antoque ,2025</footer>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+    <script>
+      let stream = null;
+      let capturedPhotoData = null;
+      let studentId = null;
+
+      // Initialize camera on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        startCamera();
+        generateStudentId();
+
+        // Update preview as user types
+        document
+          .getElementById("lastname")
+          .addEventListener("input", updatePreview);
+        document
+          .getElementById("firstname")
+          .addEventListener("input", updatePreview);
+        document
+          .getElementById("course")
+          .addEventListener("change", updatePreview);
+        document
+          .getElementById("level")
+          .addEventListener("change", updatePreview);
+      });
+
+      function startCamera() {
+        navigator.mediaDevices
+          .getUserMedia({ video: { facingMode: "user" } })
+          .then(function (mediaStream) {
+            stream = mediaStream;
+            const video = document.getElementById("video");
+            video.srcObject = mediaStream;
+          })
+          .catch(function (err) {
+            console.error("Error accessing camera:", err);
+            showMessage(
+              "Error accessing camera. Please allow camera permissions.",
+              true
+            );
+          });
+      }
+
+      function stopCamera() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          stream = null;
+        }
+      }
+
+      function capturePhoto() {
+        const video = document.getElementById("video");
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+
+        capturedPhotoData = canvas.toDataURL("image/png");
+
+        // Show captured photo
+        const capturedPhoto = document.getElementById("captured-photo");
+        capturedPhoto.src = capturedPhotoData;
+        capturedPhoto.style.display = "block";
+        video.style.display = "none";
+
+        // Update preview
+        updatePhotoPreview();
+
+        // Show retake button and hide SNAP button
+        document.getElementById("snap-btn").style.display = "none";
+        document.getElementById("retake-btn").style.display = "block";
+
+        // Stop camera
+        stopCamera();
+
+        // Enable save button if form is filled
+        checkFormComplete();
+
+        // Show message that photo is captured
+        showMessage(
+          "Photo captured! Review information and click SAVE to continue.",
+          false
+        );
+      }
+
+      function retakePhoto() {
+        capturedPhotoData = null;
+        const video = document.getElementById("video");
+        const capturedPhoto = document.getElementById("captured-photo");
+
+        capturedPhoto.style.display = "none";
+        video.style.display = "block";
+
+        document.getElementById("snap-btn").style.display = "block";
+        document.getElementById("retake-btn").style.display = "none";
+
+        startCamera();
+        updatePhotoPreview();
+        checkFormComplete();
+      }
+
+      function updatePhotoPreview() {
+        const preview = document.getElementById("photo-preview");
+        if (capturedPhotoData) {
+          preview.innerHTML = `<img src="${capturedPhotoData}" alt="Student photo">`;
+        } else {
+          preview.innerHTML =
+            '<div class="photo-preview-placeholder">No Photo</div>';
+        }
+      }
+
+      function generateStudentId() {
+        fetch("/api/student/generate-id")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              studentId = data.student_id;
+              document.getElementById("idno").value = studentId;
+              document.getElementById("preview-idno").textContent = studentId;
+              generateQRCode(studentId);
+            }
+          })
+          .catch((error) => {
+            console.error("Error generating student ID:", error);
+          });
+      }
+
+      function generateQRCode(text) {
+        const container = document.getElementById("qr-code-container");
+        container.innerHTML = ""; // Clear previous QR code
+
+        // Generate QR code on client side for preview
+        QRCode.toCanvas(
+          container,
+          text,
+          {
+            width: 90,
+            margin: 2,
+            color: {
+              dark: "#000000",
+              light: "#FFFFFF",
+            },
+          },
+          function (error) {
+            if (error) {
+              console.error("Error generating QR code:", error);
+              container.innerHTML =
+                '<div style="font-size: 11px; color: #999;">QR ERROR</div>';
+            }
+          }
+        );
+      }
+
+      function displayQRCodeFromServer(qrPath) {
+        const container = document.getElementById("qr-code-container");
+        if (qrPath) {
+          container.innerHTML = `<img src="/${qrPath}" alt="QR Code" style="max-width: 100%; max-height: 100%;">`;
+        }
+      }
+
+      function updatePreview() {
+        document.getElementById("preview-lastname").textContent =
+          document.getElementById("lastname").value.toUpperCase() || "----";
+        document.getElementById("preview-firstname").textContent =
+          document.getElementById("firstname").value.toUpperCase() || "----";
+        document.getElementById("preview-course").textContent =
+          document.getElementById("course").value || "----";
+        document.getElementById("preview-level").textContent =
+          document.getElementById("level").value || "----";
+
+        checkFormComplete();
+      }
+
+      function checkFormComplete() {
+        const lastname = document.getElementById("lastname").value.trim();
+        const firstname = document.getElementById("firstname").value.trim();
+        const course = document.getElementById("course").value;
+        const level = document.getElementById("level").value;
+
+        const isComplete =
+          lastname &&
+          firstname &&
+          course &&
+          level &&
+          capturedPhotoData &&
+          studentId;
+        const saveBtn = document.getElementById("save-btn");
+        if (saveBtn) {
+          saveBtn.disabled = !isComplete;
+        }
+      }
+
+      function showMessage(text, isError = false) {
+        const messageDiv = document.getElementById("message");
+        messageDiv.textContent = text;
+        messageDiv.className = "message " + (isError ? "error" : "success");
+        messageDiv.style.display = "block";
+
+        setTimeout(() => {
+          messageDiv.style.display = "none";
+        }, 5000);
+      }
+
+      function saveStudent() {
+        const lastname = document.getElementById("lastname").value.trim();
+        const firstname = document.getElementById("firstname").value.trim();
+        const course = document.getElementById("course").value;
+        const level = document.getElementById("level").value;
+
+        if (
+          !lastname ||
+          !firstname ||
+          !course ||
+          !level ||
+          !capturedPhotoData ||
+          !studentId
+        ) {
+          showMessage("Please fill in all fields and capture a photo", true);
+          return;
+        }
+
+        const saveBtn = document.getElementById("save-btn");
+        saveBtn.disabled = true;
+        saveBtn.textContent = "SAVING...";
+
+        fetch("/api/student/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            student_id: studentId,
+            lastname: lastname,
+            firstname: firstname,
+            course: course,
+            level: level,
+            photo: capturedPhotoData,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              showMessage("Student added successfully!", false);
+              // Display the server-generated QR code
+              if (data.qr_path) {
+                displayQRCodeFromServer(data.qr_path);
+              }
+              setTimeout(() => {
+                window.location.href = "/admin/students";
+              }, 2000);
+            } else {
+              showMessage(data.message || "Error saving student", true);
+              saveBtn.disabled = false;
+              saveBtn.textContent = "SAVE";
+            }
+          })
+          .catch((error) => {
+            showMessage("Error: " + error.message, true);
+            saveBtn.disabled = false;
+            saveBtn.textContent = "SAVE";
+          });
+      }
+
+      function cancelAndGoBack() {
+        stopCamera();
+        window.location.href = "/admin/students";
+      }
+
+      // Clean up camera on page unload
+      window.addEventListener("beforeunload", function () {
+        stopCamera();
+      });
+    </script>
+  </body>
+</html>

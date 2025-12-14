@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Python(20420) 10:30 - 12:01 MW - Admin</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      /* Top bar */
+      .top-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        padding: 18px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .top-bar-title {
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .login-button {
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 10px 20px;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .login-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Main content */
+      .page-wrapper {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .qr-wrapper {
+        position: relative;
+        margin-top: 40px;
+        margin-bottom: 30px;
+        width: 100%;
+        max-width: 420px;
+        height: 300px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      #qr-reader {
+        width: 100%;
+        height: 100%;
+      }
+
+      .qr-label {
+        position: absolute;
+        left: 105%;
+        top: 30%;
+        font-size: 14px;
+        color: #000000;
+        white-space: nowrap;
+        line-height: 1.4;
+      }
+
+      .qr-result {
+        margin-top: 20px;
+        padding: 16px 20px;
+        background-color: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        max-width: 420px;
+        text-align: center;
+        display: none;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .qr-result.active {
+        display: block;
+      }
+
+      .qr-result-text {
+        font-size: 14px;
+        color: #2d3748;
+        word-break: break-all;
+        font-weight: 600;
+      }
+
+      .success-message {
+        color: #22543d;
+        font-size: 14px;
+        margin-top: 12px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        border-radius: 8px;
+        border: 2px solid #48bb78;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+      }
+
+      .error-message {
+        color: #742a2a;
+        font-size: 13px;
+        margin-top: 12px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #fed7d7 0%, #fc8181 100%);
+        border-radius: 8px;
+        border: 2px solid #e53e3e;
+        max-width: 420px;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: #ffffff;
+        padding: 20px 0;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+
+      @media (max-width: 768px) {
+        .page-wrapper {
+          padding: 20px 10px;
+        }
+
+        .qr-wrapper {
+          width: 100%;
+          max-width: 100%;
+          height: 250px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+
+        #qr-reader {
+          border-radius: 8px;
+        }
+
+        .qr-label {
+          position: static;
+          margin-bottom: 10px;
+          left: auto;
+          top: auto;
+          text-align: center;
+        }
+
+        .qr-result {
+          max-width: 100%;
+          padding: 12px 16px;
+          margin: 0 auto;
+        }
+
+        .success-message {
+          max-width: 100%;
+        }
+
+        .error-message {
+          max-width: 100%;
+          font-size: 12px;
+        }
+
+        .login-button {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+
+        .top-bar {
+          padding: 14px 16px;
+          font-size: 14px;
+        }
+
+        .top-bar-title {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .page-wrapper {
+          padding: 15px 10px;
+        }
+
+        .qr-wrapper {
+          height: 220px;
+          margin-top: 15px;
+          margin-bottom: 15px;
+        }
+
+        .qr-result {
+          padding: 10px 12px;
+          font-size: 12px;
+        }
+
+        .qr-result-text {
+          font-size: 12px;
+          word-break: break-word;
+        }
+
+        .success-message {
+          font-size: 12px;
+          padding: 10px 12px;
+          margin-top: 10px;
+        }
+
+        .error-message {
+          font-size: 11px;
+          padding: 10px 12px;
+          margin-top: 10px;
+        }
+
+        .top-bar {
+          padding: 12px 12px;
+          font-size: 12px;
+        }
+
+        .top-bar-title {
+          font-size: 12px;
+        }
+
+        .login-button {
+          padding: 6px 12px;
+          font-size: 11px;
+        }
+
+        .footer {
+          font-size: 11px;
+          padding: 15px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="top-bar-title">PYTHON (19877) 8:00 - 10:30 A.M MW</div>
+      <a href="{{ url_for('admin_login') }}" class="login-button">LOGIN</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="page-wrapper">
+      <div class="qr-wrapper">
+        <!-- this box is the QRCode Reader Viewer area -->
+        <div id="qr-reader"></div>
+        <div class="qr-label">
+          QRCode Reader<br />
+          Viewer
+        </div>
+      </div>
+      <div class="qr-result" id="qr-result">
+        <div class="qr-result-text" id="qr-result-text"></div>
+      </div>
+      <div
+        class="success-message"
+        id="success-message"
+        style="display: none"
+      ></div>
+      <div class="error-message" id="error-message" style="display: none"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Copyright &copy; Ronan Antoque & Badilles Govan, 2025
+    </div>
+
+    <!-- QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <script>
+      let html5QrcodeScanner = null;
+      let lastScannedCode = null;
+      let scanCooldown = false;
+
+      function onScanSuccess(decodedText, decodedResult) {
+        // Prevent duplicate scans within 2 seconds
+        if (scanCooldown || lastScannedCode === decodedText) {
+          return;
+        }
+
+        lastScannedCode = decodedText;
+        scanCooldown = true;
+
+        // Reset cooldown after 2 seconds
+        setTimeout(() => {
+          scanCooldown = false;
+          lastScannedCode = null;
+        }, 2000);
+
+        // Display the scanned QR code result
+        const resultDiv = document.getElementById("qr-result");
+        const resultText = document.getElementById("qr-result-text");
+        const errorDiv = document.getElementById("error-message");
+        const successDiv = document.getElementById("success-message");
+
+        resultText.textContent = `Scanning QR Code: ${decodedText}...`;
+        resultDiv.classList.add("active");
+        errorDiv.style.display = "none";
+        successDiv.style.display = "none";
+
+        // Send QR code to backend to record attendance
+        fetch("/api/scan-attendance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ student_id: decodedText }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              if (data.student.firstname == null) {
+                return (resultText.textContent = "STUDENT ALREADY RECORDED!");
+              }
+              resultText.textContent = `Student: ${data.student.firstname} ${data.student.lastname}`;
+              successDiv.textContent = `✓ ${data.message} - Time: ${data.attendance.time_in}`;
+              successDiv.style.display = "block";
+              errorDiv.style.display = "none";
+
+              setTimeout(() => {
+                window.location.href = `/static/check_user?id=${data.student.id}&firstname=${data.student.firstname}&lastname=${data.student.lastname}&course=${data.student.course}&level=${data.student.level}`;
+              }, 1000);
+            } else {
+              resultText.textContent = `QR Code: ${decodedText}`;
+              errorDiv.textContent = `✗ ${data.message}`;
+              errorDiv.style.display = "block";
+              successDiv.style.display = "none";
+            }
+          })
+          .catch((error) => {
+            resultText.textContent = `QR Code: ${decodedText}`;
+            errorDiv.textContent = `Error: ${error.message}`;
+            errorDiv.style.display = "block";
+            successDiv.style.display = "none";
+            console.error("Error:", error);
+          });
+
+        console.log(`QR Code scanned: ${decodedText}`);
+      }
+
+      function onScanFailure(error) {
+        // Handle scan failure - usually ignored for continuous scanning
+        // console.log(`QR Code scan error: ${error}`);
+      }
+
+      // Initialize QR Code Scanner when page loads
+      document.addEventListener("DOMContentLoaded", function () {
+        const qrReaderDiv = document.getElementById("qr-reader");
+
+        html5QrcodeScanner = new Html5Qrcode("qr-reader");
+
+        const config = {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.6,
+        };
+
+        html5QrcodeScanner
+          .start(
+            { facingMode: "environment" }, // Use back camera on mobile, or default camera
+            config,
+            onScanSuccess,
+            onScanFailure
+          )
+          .catch((err) => {
+            // Handle camera permission errors
+            const errorDiv = document.getElementById("error-message");
+            errorDiv.textContent = `Camera error: ${err.message}. Please allow camera access and refresh the page.`;
+            errorDiv.style.display = "block";
+            console.error("Error starting QR scanner:", err);
+          });
+      });
+
+      // Clean up scanner when page unloads
+      window.addEventListener("beforeunload", function () {
+        if (html5QrcodeScanner) {
+          html5QrcodeScanner.clear().catch((err) => {
+            console.error("Error clearing QR scanner:", err);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
